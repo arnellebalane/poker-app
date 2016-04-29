@@ -1,0 +1,23 @@
+{
+  "name": "poker-app",
+  "version": "0.0.0",
+  "description": "Poking app to demonstrate the capabilities of Service Workers.",
+  "main": "source/app.js",
+  "scripts": {
+    "start": "node source/app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "poke",
+    "poking",
+    "service-worker",
+    "offline",
+    "push-notification"
+  ],
+  "author": "Arnelle Balane <arnellebalane@gmail.com> (github.com/arnellebalane)",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.13.4",
+    "nunjucks": "^2.4.2"
+  }
+}
