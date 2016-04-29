@@ -53,7 +53,7 @@ function retrieve(kind, id) {
             if (error) {
                 return reject(error);
             }
-            resolve(entity);
+            resolve(fromDatastore(entity));
         });
     });
 }
@@ -88,6 +88,24 @@ function delete(kind, id) {
 }
 
 
+function filter(kind, filters) {
+    return new Promise(function(resolve, reject) {
+        var query = datastore.createQuery(kind);
+        Object.keys(filters || {}).forEach(function(filter) {
+            filter = filters[filter].unshift(filter);
+            query = query.filter.apply(query, filter);
+        });
+
+        datastore.runQuery(query, function(error, entities) {
+            if (error) {
+                return reject(error);
+            }
+            resolve(entities.map(fromDatastore));
+        });
+    });
+}
+
+
 function datastoreFactory(kind) {
     return {
         create: function(data) {
@@ -101,6 +119,12 @@ function datastoreFactory(kind) {
         },
         delete: function(id) {
             return delete(kind, id);
+        },
+        filter: function(filters) {
+            return filter(kind, filters);
+        },
+        all: function() {
+            return filter(kind, {});
         }
     };
 }
