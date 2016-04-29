@@ -74,8 +74,8 @@ function update(kind, id, data) {
 }
 
 
-function delete(kind, id) {
-    return new Promise(functoin(resolve, reject) {
+function remove(kind, id) {
+    return new Promise(function(resolve, reject) {
         var key = datastore.key([kind, parseInt(id, 10)]);
 
         datastore.delete(key, function(error) {
@@ -118,7 +118,7 @@ function datastoreFactory(kind) {
             return update(kind, id, data);
         },
         delete: function(id) {
-            return delete(kind, id);
+            return remove(kind, id);
         },
         filter: function(filters) {
             return filter(kind, filters);
