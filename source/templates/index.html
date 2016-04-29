@@ -9,6 +9,14 @@
 
     <body>
         <h1>Poker App</h1>
+        <h2>Welcome, {{ profile.name }}!</h2>
+        <img src="{{ profile.image }}" alt="{{ profile.name }}">
+
+        <ul>
+            {% for user in users %}
+                <li>{{ user.name }}</li>
+            {% endfor %}
+        </ul>
 
         <script src="/static/javascripts/main.js"></script>
     </body>
