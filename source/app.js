@@ -18,7 +18,11 @@ app.listen(app.get('PORT'), function() {
 
 
 app.use('/static', express.static(app.get('STATIC_DIRECTORY')));
-app.use('/', require('./resources/users/router'));
+
+
+app.get('/', function(request, response) {
+    response.render('index.html', {});
+});
 
 
 module.exports = app;
