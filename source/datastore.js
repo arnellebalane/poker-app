@@ -2,6 +2,9 @@ var gcloud = require('gcloud');
 var config = require('./config');
 
 
+var datastore = gcloud.datastore({ projectId: config.GCLOUD_PROJECT });
+
+
 // Translates from datastore's entity format to the format expected by the
 // application.
 function fromDatastore(object) {
@@ -92,8 +95,8 @@ function filter(kind, filters) {
     return new Promise(function(resolve, reject) {
         var query = datastore.createQuery(kind);
         Object.keys(filters || {}).forEach(function(filter) {
-            filter = filters[filter].unshift(filter);
-            query = query.filter.apply(query, filter);
+            filters[filter].unshift(filter);
+            query = query.filter.apply(query, filters[filter]);
         });
 
         datastore.runQuery(query, function(error, entities) {
