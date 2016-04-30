@@ -36,12 +36,27 @@ app.listen(app.get('PORT'), function() {
 app.use('/static', express.static(app.get('STATIC_DIRECTORY')));
 
 
-app.get('/', oauth2.required, oauth2.template, function(request, response) {
-    users.all().then(function(entities) {
-        var context = { users: entities };
-        response.render('index.html', context);
-    });
-});
+app.get('/',
+    oauth2.loginRequired('/login'),
+    oauth2.templateVariables,
+
+    function(request, response) {
+        users.all().then(function(entities) {
+            var context = { users: entities };
+            response.render('index.html', context);
+        });
+    }
+);
+
+
+app.get('/login',
+    oauth2.logoutRequired('/'),
+    oauth2.templateVariables,
+
+    function(request, response) {
+        response.render('login.html');
+    }
+);
 
 
 module.exports = app;

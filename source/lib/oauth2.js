@@ -10,7 +10,7 @@ function extractProfile(profile) {
         imageUrl = profile.photos[0].value;
     }
     return {
-        id:  profile.id,
+        id: profile.id,
         name: profile.displayName,
         image: imageUrl
     };
@@ -37,25 +37,6 @@ passport.deserializeUser(function(object, callback) {
 });
 
 
-function authRequired(request, response, next) {
-    if (!request.user) {
-        request.session.oauth2return = request.originalUrl;
-        return response.redirect('/auth/login');
-    }
-    next();
-}
-
-
-function addTemplateVariables(request, response, next) {
-    response.locals.profile = request.user;
-    response.locals.login = '/auth/login?return='
-        + encodeURIComponent(request.originalUrl);
-    response.locals.logout = '/auth/logout?return='
-        + encodeURIComponent(request.originalUrl);
-    next();
-}
-
-
 var router = express.Router();
 
 
@@ -67,12 +48,15 @@ router.get('/auth/login', function(request, response, next) {
 }, passport.authenticate('google', { scope: ['email', 'profile'] }));
 
 
-router.get('/auth/google/callback', passport.authenticate('google'),
-function(request, response) {
-    var redirect = request.session.oauth2return || '/';
-    delete request.session.oauth2return;
-    response.redirect(redirect);
-});
+router.get('/auth/google/callback',
+    passport.authenticate('google'),
+
+    function(request, response) {
+        var redirect = request.session.oauth2return || '/';
+        delete request.session.oauth2return;
+        response.redirect(redirect);
+    }
+);
 
 
 router.get('/auth/logout', function(request, response) {
@@ -81,9 +65,40 @@ router.get('/auth/logout', function(request, response) {
 });
 
 
-module.exports = {
-    extractProfile: extractProfile,
-    router: router,
-    required: authRequired,
-    template: addTemplateVariables
+function loginRequired(redirectUrl) {
+    return function(request, response, next) {
+        if (!request.user) {
+            request.session.oauth2return = request.originalUrl;
+            return response.redirect(redirectUrl);
+        }
+        next();
+    };
 }
+
+
+function logoutRequired(redirectUrl) {
+    return function(request, response, next) {
+        if (request.user) {
+            return response.redirect(redirectUrl);
+        }
+        next();
+    };
+}
+
+
+function templateVariables(request, response, next) {
+    response.locals.profile = request.user;
+    response.locals.loginUrl = '/auth/login?return='
+        + encodeURIComponent(request.originalUrl);
+    response.locals.logoutUrl = '/auth/logout?return='
+        + encodeURIComponent(request.originalUrl);
+    next();
+}
+
+
+module.exports = {
+    router: router,
+    loginRequired: loginRequired,
+    logoutRequired: logoutRequired,
+    templateVariables: templateVariables
+};
