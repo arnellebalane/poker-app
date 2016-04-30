@@ -23,7 +23,7 @@ var sessionConfig = {
 if (config.get('NODE_ENV') === 'production') {
     var MemcachedStore = memcached(session);
     sessionConfig.store = new MemcachedStore({
-        hosts: [config.get('NODE_ENV')]
+        hosts: [config.get('MEMCACHE_URL')]
     });
 }
 
