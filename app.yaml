@@ -3,3 +3,4 @@ vm: true
 api_version: 1
 skip_files:
     - ^node_modules$
+    - config.json
