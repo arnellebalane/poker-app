@@ -8,7 +8,7 @@ var datastore = gcloud.datastore({ projectId: config.GCLOUD_PROJECT });
 // Translates from datastore's entity format to the format expected by the
 // application.
 function fromDatastore(object) {
-    object.data.id = object.key.id;
+    object.data.key = object.key;
     return object.data;
 }
 
@@ -38,11 +38,11 @@ function create(kind, data) {
         var key = datastore.key(kind);
         var entity = { key: key, data: toDatastore(data) };
 
-        datastore.insert({ key: key, data: entity }, function(error) {
+        datastore.insert(entity, function(error) {
             if (error) {
                 return reject(error);
             }
-            resolve(entity);
+            resolve(fromDatastore(entity));
         });
     });
 }
@@ -67,11 +67,11 @@ function update(kind, id, data) {
         var key = datastore.key([kind, parseInt(id, 10)]);
         var entity = { key: key, data: toDatastore(data) };
 
-        datastore.update({ key: key, data: entity }, function(error) {
+        datastore.update(entity, function(error) {
             if (error) {
                 return reject(error);
             }
-            resolve(entity);
+            resolve(fromDatastore(entity));
         });
     });
 }
@@ -91,15 +91,16 @@ function remove(kind, id) {
 }
 
 
-function filter(kind, filters) {
+function query(kind, queries) {
     return new Promise(function(resolve, reject) {
-        var query = datastore.createQuery(kind);
-        Object.keys(filters || {}).forEach(function(filter) {
-            filters[filter].unshift(filter);
-            query = query.filter.apply(query, filters[filter]);
+        var dsQuery = datastore.createQuery(kind);
+        (queries || []).forEach(function(query) {
+            var method = query[0];
+            var parameters = query.slice(1);
+            dsQuery = dsQuery[method].apply(dsQuery, parameters);
         });
 
-        datastore.runQuery(query, function(error, entities) {
+        datastore.runQuery(dsQuery, function(error, entities) {
             if (error) {
                 return reject(error);
             }
@@ -123,11 +124,11 @@ function datastoreFactory(kind) {
         delete: function(id) {
             return remove(kind, id);
         },
-        filter: function(filters) {
-            return filter(kind, filters);
+        query: function(queries) {
+            return query(kind, queries);
         },
         all: function() {
-            return filter(kind, {});
+            return query(kind, []);
         }
     };
 }
