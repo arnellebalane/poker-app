@@ -13,13 +13,6 @@ var config = require('./config');
 var app = express();
 var users = datastore('users');
 
-app.set('PORT', process.env.PORT || 3000);
-app.set('TEMPLATES_DIRECTORY', path.join(__dirname, 'templates'));
-app.set('STATIC_DIRECTORY', path.join(__dirname, 'static'));
-app.set('views', app.get('TEMPLATES_DIRECTORY'));
-
-nunjucks.configure(app.set('TEMPLATES_DIRECTORY'), { express: app });
-
 var sessionConfig = {
     resave: false,
     saveUninitialized: false,
@@ -39,12 +32,18 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(oauth2.router);
 
-app.listen(app.get('PORT'), function() {
-    console.log('poker-app running at localhost:' + app.get('PORT'));
+var TEMPLATES_DIRECTORY = path.join(__dirname, 'templates');
+var STATIC_DIRECTORY = path.join(__dirname, 'static');
+
+app.set('views', TEMPLATES_DIRECTORY);
+nunjucks.configure(TEMPLATES_DIRECTORY, { express: app });
+
+app.listen(config.get('PORT'), function() {
+    console.log('poker-app running at localhost:' + config.get('PORT'));
 });
 
 
-app.use('/static', express.static(app.get('STATIC_DIRECTORY')));
+app.use('/static', express.static(STATIC_DIRECTORY));
 
 
 app.get('/',
