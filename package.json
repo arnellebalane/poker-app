@@ -7,6 +7,9 @@
     "start": "node source/app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "engines": {
+    "node": "^6.0.0"
+  },
   "keywords": [
     "poke",
     "poking",
