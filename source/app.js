@@ -5,6 +5,7 @@ var nunjucks = require('nunjucks');
 var passport = require('passport');
 var datastore = require('./lib/datastore');
 var oauth2 = require('./lib/oauth2');
+var middlewares = require('./lib/middlewares');
 var config = require('./config');
 
 
@@ -39,6 +40,7 @@ app.use('/static', express.static(app.get('STATIC_DIRECTORY')));
 app.get('/',
     oauth2.loginRequired('/login'),
     oauth2.templateVariables,
+    middlewares.getOrCreateUserProfile,
 
     function(request, response) {
         users.all().then(function(entities) {
