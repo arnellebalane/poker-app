@@ -7,7 +7,7 @@ var GoogleStrategy = require('passport-google-oauth20').Strategy;
 function extractProfile(profile) {
     var imageUrl = '';
     if (profile.photos && profile.photos.length) {
-        imageUrl = profile.photos[0].value;
+        imageUrl = profile.photos[0].value.replace(/sz=\d+$/g, 'sz=200');
     }
     return {
         id: profile.id,
@@ -54,6 +54,7 @@ router.get('/auth/google/callback',
     function(request, response) {
         var redirect = request.session.oauth2return || '/';
         delete request.session.oauth2return;
+        delete request.session.userProfileSaved;
         response.redirect(redirect);
     }
 );
