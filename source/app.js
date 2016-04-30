@@ -44,7 +44,10 @@ app.get('/',
 
     function(request, response) {
         users.all().then(function(entities) {
-            var context = { users: entities };
+            var users = entities.filter(function(entity) {
+                return entity.id !== request.user.id;
+            });
+            var context = { users: users };
             response.render('index.html', context);
         });
     }
