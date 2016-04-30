@@ -34,12 +34,7 @@ if (config.get('NODE_ENV') === 'production') {
     });
 }
 
-app.use(session({
-    resave: false,
-    saveUninitialized: false,
-    secret: config.get('OAUTH2_CLIENT_SECRET'),
-    signed: true
-}));
+app.use(session(sessionConfig));
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(oauth2.router);
