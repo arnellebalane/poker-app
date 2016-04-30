@@ -1,0 +1,50 @@
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+html {
+    font-size: 62.5%;
+}
+
+
+body {
+    height: 100vh;
+    background-color: #e0e0e0;
+}
+
+
+.google-signin-btn {
+    width: 80vw;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    font-size: 0;
+    background: url("../images/google-signin-normal.png") center center no-repeat;
+    background-size: cover;
+    transform: translate(-50%, -50%);
+}
+
+.google-signin-btn:hover,
+.google-signin-btn:active {
+    background-image: url("../images/google-signin-pressed.png");
+}
+
+
+.google-signin-btn::before {
+    content: "";
+    display: block;
+    padding-top: calc(100% / (382 / 92));
+}
+
+
+
+@media all and (min-device-width: 425px) {
+    .google-signin-btn {
+        width: 300px;
+    }
+}
