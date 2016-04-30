@@ -1,6 +1,7 @@
 var path = require('path');
 var express = require('express');
 var session = require('express-session');
+var memcached = require('connect-memcached');
 var nunjucks = require('nunjucks');
 var passport = require('passport');
 var datastore = require('./lib/datastore');
@@ -19,10 +20,24 @@ app.set('views', app.get('TEMPLATES_DIRECTORY'));
 
 nunjucks.configure(app.set('TEMPLATES_DIRECTORY'), { express: app });
 
+var sessionConfig = {
+    resave: false,
+    saveUninitialized: false,
+    secret: config.get('OAUTH2_CLIENT_SECRET'),
+    signed: true
+};
+
+if (config.get('NODE_ENV') === 'production') {
+    var MemcachedStore = memcached(session);
+    sessionConfig.store = new MemcachedStore({
+        hosts: [config.get('NODE_ENV')]
+    });
+}
+
 app.use(session({
     resave: false,
     saveUninitialized: false,
-    secret: config.OAUTH2_CLIENT_SECRET,
+    secret: config.get('OAUTH2_CLIENT_SECRET'),
     signed: true
 }));
 app.use(passport.initialize());

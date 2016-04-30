@@ -2,20 +2,17 @@ var gcloud = require('gcloud');
 var config = require('../config');
 
 
-var datastore = gcloud.datastore({ projectId: config.GCLOUD_PROJECT });
+var datastore = gcloud.datastore({
+    projectId: config.get('GCLOUD_PROJECT')
+});
 
 
-// Translates from datastore's entity format to the format expected by the
-// application.
 function fromDatastore(object) {
     object.data.key = object.key;
     return object.data;
 }
 
 
-// Translates from the application's format to the datastore's extended entity
-// property format. It also handles marking any specified properties as
-// non-index. Does not translate the key.
 function toDatastore(object, nonIndexed) {
     nonIndexed = nonIndexed || [];
     var results = [];
