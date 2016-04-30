@@ -1,5 +1,5 @@
 var gcloud = require('gcloud');
-var config = require('./config');
+var config = require('../config');
 
 
 var datastore = gcloud.datastore({ projectId: config.GCLOUD_PROJECT });

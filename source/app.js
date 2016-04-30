@@ -3,7 +3,7 @@ var express = require('express');
 var session = require('express-session');
 var nunjucks = require('nunjucks');
 var passport = require('passport');
-var datastore = require('./datastore');
+var datastore = require('./lib/datastore');
 var oauth2 = require('./lib/oauth2');
 var config = require('./config');
 
