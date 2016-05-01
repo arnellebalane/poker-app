@@ -8,16 +8,11 @@
     </head>
 
     <body>
-        <h1>Poker App</h1>
-        <h2>Welcome, {{ profile.name }}!</h2>
-        <a href="{{ logoutUrl }}">Sign Out</a><br>
-        <img src="{{ profile.image }}" alt="{{ profile.name }}">
-
-        <ul>
+        <ul class="users-list">
             {% for user in users %}
-                <li>
-                    <img src="{{ user.image }}" alt="{{ user.name }}">
-                    <p>{{ user.name }}</p>
+                <li class="user">
+                    <img src="{{ user.image }}" alt="{{ user.name }}" class="user__image">
+                    <p class="user__name">{{ user.name }}</p>
                 </li>
             {% endfor %}
         </ul>

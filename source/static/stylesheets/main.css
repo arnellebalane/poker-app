@@ -14,4 +14,77 @@ html {
 
 body {
     height: 100vh;
+    font-family: "Ubuntu", "Helvetica", "Open Sans", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    color: #333;
+    background-color: #e0e0e0;
+}
+
+
+.users-list {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 1rem;
+    font-size: 0;
+}
+
+
+.user {
+    width: 100%;
+    padding: 1.5rem;
+    margin: 1rem;
+    border-radius: 3px;
+    background-color: #fff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12),
+        0 1px 2px rgba(0, 0, 0, 0.24);
+    cursor: pointer;
+    transition: box-shadow 200ms ease-in-out;
+}
+
+.user:hover {
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19),
+        0 6px 6px rgba(0, 0, 0, 0.23);
+}
+
+
+.user__name {
+    margin-top: 1.5rem;
+    font-size: 1.4rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    text-align: center;
+}
+
+
+.user__image {
+    width: 100%;
+}
+
+
+
+@media all and (min-width: 425px) {
+    .user {
+        width: calc((100% - (2 * 2rem)) / 2);
+    }
+}
+
+
+@media all and (min-width: 768px) {
+    .user {
+        width: calc((100% - (3 * 2rem)) / 3);
+    }
+}
+
+
+@media all and (min-width: 1024px) {
+    .user {
+        width: calc((100% - (4 * 2rem)) / 4);
+    }
+}
+
+
+@media all and (min-width: 1440px) {
+    .user {
+        width: calc((100% - (6 * 2rem)) / 6);
+    }
 }
