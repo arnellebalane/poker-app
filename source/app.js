@@ -100,4 +100,16 @@ app.get('/subscribe',
 );
 
 
+app.get('/poke',
+    oauth2.loginRequired('/'),
+
+    function(request, response) {
+        var query = [['filter', 'id', '=', request.query.id]];
+        users.query(query).then(function(user) {
+            console.log(user);
+            response.status(200).end();
+        });
+    });
+
+
 module.exports = app;

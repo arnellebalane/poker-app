@@ -47,3 +47,14 @@ if ('serviceWorker' in navigator) {
         });
     });
 }
+
+
+document.addEventListener('click', function(e) {
+    var user = e.target.closest('.user');
+    if (user) {
+        var id = user.dataset.id;
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', '/poke?id=' + id);
+        xhr.send();
+    }
+});
