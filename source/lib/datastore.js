@@ -63,7 +63,6 @@ function update(kind, id, data) {
     return new Promise(function(resolve, reject) {
         var key = datastore.key([kind, parseInt(id, 10)]);
         var entity = { key: key, data: toDatastore(data) };
-        console.log(key, entity);
 
         datastore.update(entity, function(error) {
             if (error) {
