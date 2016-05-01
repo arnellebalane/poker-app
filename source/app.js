@@ -4,6 +4,7 @@ var session = require('express-session');
 var memcached = require('connect-memcached');
 var nunjucks = require('nunjucks');
 var passport = require('passport');
+var requests = require('request');
 var datastore = require('./lib/datastore');
 var oauth2 = require('./lib/oauth2');
 var middlewares = require('./lib/middlewares');
@@ -89,6 +90,8 @@ app.get('/subscribe',
                 || user.subscriptions.indexOf(subscriptionId) === -1) {
                     user.subscriptions = user.subscriptions || [];
                     user.subscriptions.push(subscriptionId);
+
+                    delete user.key;
                     return users.update(request.user.key, user);
                 }
                 return user;
@@ -106,7 +109,19 @@ app.get('/poke',
     function(request, response) {
         var query = [['filter', 'id', '=', request.query.id]];
         users.query(query).then(function(user) {
-            console.log(user);
+            if (user[0].subscriptions && user[0].subscriptions[0].length) {
+                var options = {
+                    url: 'https://android.googleapis.com/gcm/send',
+                    headers: {
+                        Authorization: 'key=' + config.get('GCM_API_KEY')
+                    },
+                    body: {
+                        registration_ids: user[0].subscriptions
+                    },
+                    json: true
+                };
+                requests.post(options);
+            }
             response.status(200).end();
         });
     });
