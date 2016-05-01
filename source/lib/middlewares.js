@@ -22,7 +22,7 @@ function getOrCreateUserProfile(request, response, next) {
                 });
             })
             .then(function(entity) {
-                request.user.key = entity;
+                request.user.key = entity.key.id;
                 next();
             });
     } else {

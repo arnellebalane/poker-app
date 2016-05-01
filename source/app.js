@@ -34,6 +34,9 @@ app.use(oauth2.router);
 
 var TEMPLATES_DIRECTORY = path.join(__dirname, 'templates');
 var STATIC_DIRECTORY = path.join(__dirname, 'static');
+var SERVICE_WORKER_PATH = path.join(__dirname, 'static',
+    'javascripts', 'service-worker.js');
+var MANIFEST_FILE_PATH = path.join(__dirname, 'manifest.json');
 
 app.set('views', TEMPLATES_DIRECTORY);
 nunjucks.configure(TEMPLATES_DIRECTORY, { express: app });
@@ -44,6 +47,8 @@ app.listen(config.get('PORT'), function() {
 
 
 app.use('/static', express.static(STATIC_DIRECTORY));
+app.use('/service-worker.js', express.static(SERVICE_WORKER_PATH));
+app.use('/manifest.json', express.static(MANIFEST_FILE_PATH));
 
 
 app.get('/',
@@ -69,6 +74,28 @@ app.get('/login',
 
     function(request, response) {
         response.render('login.html');
+    }
+);
+
+
+app.get('/subscribe',
+    oauth2.loginRequired('/'),
+
+    function(request, response) {
+        var subscriptionId = request.query.id;
+        users.retrieve(request.user.key)
+            .then(function(user) {
+                if (!user.subscriptions
+                || user.subscriptions.indexOf(subscriptionId) === -1) {
+                    user.subscriptions = user.subscriptions || [];
+                    user.subscriptions.push(subscriptionId);
+                    return users.update(request.user.key, user);
+                }
+                return user;
+            })
+            .then(function(user) {
+                response.status(200).end();
+            });
     }
 );
 

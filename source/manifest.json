@@ -1,0 +1,8 @@
+{
+    "name": "Poker App Staging",
+    "short_name": "Poker App Staging",
+    "icons": [],
+    "start_url": "/",
+    "display": "standalone",
+    "gcm_sender_id": "200704710360"
+}
