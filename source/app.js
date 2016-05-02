@@ -116,7 +116,12 @@ app.get('/poke',
                         Authorization: 'key=' + config.get('GCM_API_KEY')
                     },
                     body: {
-                        registration_ids: user[0].subscriptions
+                        registration_ids: user[0].subscriptions,
+                        notification: {
+                            title: 'Poker App Notification',
+                            body: request.user.name + ' poked you.',
+                            icon: request.user.image
+                        }
                     },
                     json: true
                 };

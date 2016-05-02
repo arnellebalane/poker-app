@@ -24,13 +24,15 @@ nconf
         'OAUTH2_CLIENT_ID',
         'OAUTH2_CLIENT_SECRET',
         'OAUTH2_CALLBACK',
-        'PORT'
+        'PORT',
+        'SECRET'
     ])
     .file({ file: path.join(__dirname, 'config.json') })
     .defaults({
         DATA_BACKEND: 'datastore',
         MEMCACHE_URL: '127.0.0.1:11211',
-        PORT: 3000
+        PORT: 3000,
+        SECRET: 'pokerappstagingtwo'
     });
 
 
