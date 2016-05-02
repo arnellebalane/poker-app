@@ -4,13 +4,14 @@
         <meta charset="utf-8">
         <title>Poker App</title>
 
+        <link rel="manifest" href="/manifest.json">
         <link rel="stylesheet" href="/static/stylesheets/main.css">
     </head>
 
     <body>
         <ul class="users-list">
             {% for user in users %}
-                <li class="user">
+                <li class="user" data-id="{{ user.id }}">
                     <img src="{{ user.image }}" alt="{{ user.name }}" class="user__image">
                     <p class="user__name">{{ user.name }}</p>
                 </li>
