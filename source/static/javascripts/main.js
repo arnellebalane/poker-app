@@ -16,7 +16,7 @@ if ('serviceWorker' in navigator) {
                     if (!subscription) {
                         return subscribeToPushNotifications();
                     }
-                    sendSubscriptionToServer(subscription);
+                    sendSubscriptionToServer('subscribe', subscription);
                 })
                 .catch(function(error) {
                     console.error('Error in getSubscription()', error);
@@ -25,7 +25,7 @@ if ('serviceWorker' in navigator) {
             function subscribeToPushNotifications() {
                 registration.pushManager.subscribe({ userVisibleOnly: true })
                     .then(function(subscription) {
-                        sendSubscriptionToServer(subscription);
+                        sendSubscriptionToServer('subscribe', subscription);
                     })
                     .catch(function(error) {
                         if (Notification.permission === 'denied') {
@@ -38,10 +38,25 @@ if ('serviceWorker' in navigator) {
                     });
             }
 
-            function sendSubscriptionToServer(subscription) {
+            function unsubscribeFromPushNotifications() {
+                registration.pushManager.getSubscription()
+                    .then(function(subscription) {
+                        return subscription.unsubscribe().then(function() {
+                            sendSubscriptionToServer(
+                                'unsubscribe', subscription);
+                        });
+                    })
+                    .catch(function(error) {
+                        console.error('Error in getSubscription()', error);
+                    });
+            }
+
+            function sendSubscriptionToServer(endpoint, subscription) {
                 var subscriptionId = subscription.endpoint.split('/').pop();
+                var url = endpoint + '/?id=' + subscriptionId;
+
                 var xhr = new XMLHttpRequest();
-                xhr.open('GET', '/subscribe?id=' + subscriptionId);
+                xhr.open('GET', url);
                 xhr.send();
             }
         });

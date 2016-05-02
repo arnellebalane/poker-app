@@ -103,6 +103,29 @@ app.get('/subscribe',
 );
 
 
+app.get('/unsubscribe',
+    oauth2.loginRequired('/'),
+
+    function(request, response) {
+        var subscriptionId = request.query.id;
+        users.retrieve(request.user.key)
+            .then(function(user) {
+                if (user.subscriptions && user.subscriptions.length) {
+                    var index = user.subscriptions.indexOf(subscriptionId);
+                    user.subscriptions.splice(index, 1);
+
+                    delete user.key;
+                    return users.update(request.user.key, user);
+                }
+                return user;
+            })
+            .then(function(user) {
+                response.status(200).end();
+            });
+    }
+);
+
+
 app.get('/poke',
     oauth2.loginRequired('/'),
 
